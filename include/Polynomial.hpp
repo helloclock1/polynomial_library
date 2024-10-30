@@ -54,7 +54,6 @@ private:
  * operators;
  *  - T must have an ability to be *implicitly* constructed from 0 (additive identity) and 1
  * (multiplicative identity).
- *
  */
 template <typename T>
 class Polynomial {
@@ -67,7 +66,11 @@ public:
     Polynomial<T>& operator=(const Polynomial<T>&);
     Polynomial<T>& operator=(Polynomial<T>&&);
 
-    // Constructs a Polynomial from a vector, where on i-th position is a coefficient before x^i.
+    /**
+     * Construct a `Polynomial` object from a vector of terms.
+     *
+     * @param list A vector of terms, where on $i$-th position stands a coefficient before x^i.
+     */
     Polynomial(std::vector<T> list);
 
     // Mathematical operator overloads.
@@ -79,11 +82,17 @@ public:
 
     // Static methods that return predetermined polynomials that don't rely on any other polynomial.
 
-    // Returns a multiplicative identity polynomial.
+    /**
+     * Returns a multiplicative identity polynomial.
+     */
     static Polynomial<T> Identity();
-    // Returns a polynomial in form `value * x^0`.
+    /**
+     * Returns a polynomial in form `value * x^0`.
+     */
     static Polynomial<T> Constant(const T& value);
-    // Returns an additive identity polynomial.
+    /**
+     * Returns an additive identity polynomial.
+     */
     static Polynomial<T> Zero();
 
     // Friend operator overloads
@@ -143,14 +152,45 @@ public:
 
     // Other useful functions.
 
-    // For user's safety, exponentiation is not done inplace.
+    /**
+     * Raises the polynomial to `power`th power. For user's safety exponentiation is not done
+     * inplace.
+     *
+     * @param power Power the polynomial is raised to.
+     * @return the resulting polynomial.
+     */
     Polynomial<T> Power(size_t power) const;
 
+    /**
+     * Evaluates polynomial at point `point`.
+     *
+     * @param point A point the polynomial is begin evaluated at.
+     * @return value at point `point`.
+     */
     const T At(const T& point) const;
+
+    /**
+     * Evaluates polynomial at point `point` (copy of `At`).
+     *
+     * @param point A point the polynomial is begin evaluated at.
+     * @return value at point `point`.
+     */
     const T operator()(const T& point) const;
 
-    // For user's safety, the substitution is not done inplace.
+    /**
+     * Substitutes polynomial `other` into the current polynomial. For user's safety substitution is
+     * not done inplace.
+     *
+     * @param other The polynomial that is being substituted.
+     * @return the resulting polynomial.
+     */
     Polynomial<T> Substitute(const Polynomial<T>& other) const;
+
+    /**
+     * Returns coefficients of the polynomial as they are stored inside of the class.
+     *
+     * @return a map of coefficients.
+     */
     const std::map<size_t, T>& GetCoefficients() const;
 
 private:

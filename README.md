@@ -4,7 +4,7 @@ Small library for working with polynomials in C++
 
 ## Dependencies
 
-- `cmake`;
+- `make`, `cmake`;
 - C++20-ready compiler;
 - `doctest` testing framework will be downloaded automatically.
 

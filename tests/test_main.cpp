@@ -101,9 +101,29 @@ void CheckCorrectness(double a, double b) {
 void CheckMatrixCorrectness(p::SquareMatrix<ll, 3> a, p::SquareMatrix<ll, 3> b) {
     for (size_t i = 0; i < 3; ++i) {
         for (size_t j = 0; j < 3; ++j) {
-            // CHECK_EQ(a.GetMatrix()[i][j], b.GetMatrix()[i][j]);
             CHECK_EQ(a[i][j], b[i][j]);
         }
+    }
+}
+
+void RunTest(p::Polynomial<double> poly, std::vector<std::pair<double, size_t>> coeffs,
+             size_t iters) {
+    for (size_t dummy = 0; dummy < 100; ++dummy) {
+        double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
+        double poly_evaluation = poly(value);
+        double actual_evaluation = Evaluate(coeffs, value);
+        CheckCorrectness(poly_evaluation, actual_evaluation);
+    }
+}
+
+void RunMatrixTest(p::Polynomial<p::SquareMatrix<ll, 3>> poly,
+                   std::vector<std::pair<p::SquareMatrix<ll, 3>, size_t>> coeffs, size_t iters) {
+    using Matrix = p::SquareMatrix<ll, 3>;
+    for (size_t dummy2 = 0; dummy2 < iters; ++dummy2) {
+        Matrix value = GenerateMatrix();
+        Matrix poly_evaluation = poly(value);
+        Matrix actual_evaluation = Evaluate(coeffs, value);
+        CheckMatrixCorrectness(poly_evaluation, actual_evaluation);
     }
 }
 
@@ -140,12 +160,8 @@ TEST_CASE("Polynomial class works with rather standard coefficients") {
                 auto poly_coeff = GeneratePolynomial(5);
                 p::Polynomial<double> poly = poly_coeff.first + p::Polynomial<double>::Zero();
                 std::vector<std::pair<double, size_t>> coeffs = poly_coeff.second;
-                for (size_t dummy2 = 0; dummy2 < 100; ++dummy2) {
-                    double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
-                    double poly_evaluation = poly(value);
-                    double actual_evaluation = Evaluate(coeffs, value);
-                    CheckCorrectness(poly_evaluation, actual_evaluation);
-                }
+
+                RunTest(poly, coeffs, 100);
             }
         }
         SUBCASE("Identity") {
@@ -153,12 +169,8 @@ TEST_CASE("Polynomial class works with rather standard coefficients") {
                 auto poly_coeff = GeneratePolynomial(5);
                 p::Polynomial<double> poly = poly_coeff.first * p::Polynomial<double>::Identity();
                 std::vector<std::pair<double, size_t>> coeffs = poly_coeff.second;
-                for (size_t dummy2 = 0; dummy2 < 100; ++dummy2) {
-                    double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
-                    double poly_evaluation = poly(value);
-                    double actual_evaluation = Evaluate(coeffs, value);
-                    CheckCorrectness(poly_evaluation, actual_evaluation);
-                }
+
+                RunTest(poly, coeffs, 100);
             }
         }
         SUBCASE("Constant") {
@@ -183,49 +195,9 @@ TEST_CASE("Polynomial class works with rather standard coefficients") {
             p::Polynomial<double> poly = poly_coeff.first;
             std::vector<std::pair<double, size_t>> coeffs = poly_coeff.second;
 
-            for (size_t i = 0; i < 100; ++i) {
-                double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
-                double poly_evaluation = poly(value);
-                double actual_evaluation = Evaluate(coeffs, value);
-                CheckCorrectness(poly_evaluation, actual_evaluation);
-            }
+            RunTest(poly, coeffs, 100);
         }
     }
-
-    // SUBCASE("Polynomial exponentiation") {
-    //     for (size_t dummy = 0; dummy < 10000; ++dummy) {
-    //         auto poly_coeff = GeneratePolynomial(5);
-    //         p::Polynomial<double> poly = poly_coeff.first;
-    //         std::vector<std::pair<double, size_t>> coeffs = poly_coeff.second;
-    //
-    //         size_t power = rnd() % 3 + 2;
-    //         poly = poly.Power(power);
-    //
-    //         double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
-    //         double poly_evaluation = poly(value);
-    //         double actual_evaluation = std::pow(Evaluate(coeffs, value), power);
-    //         CheckCorrectness(poly_evaluation, actual_evaluation);
-    //     }
-    // }
-
-    // SUBCASE("Polynomial substitution") {
-    //     p::Variable<double> x;
-    //     for (size_t dummy = 0; dummy < 10000; ++dummy) {
-    //         p::Polynomial<double> poly = 1.0 * x;
-    //         double value = static_cast<double>(rnd() % 10000 - 5000) / 1000;
-    //
-    //         double intermediate_value = 0;
-    //         auto poly_coeff = GeneratePolynomial(10);
-    //         p::Polynomial<double> poly2 = poly_coeff.first;
-    //         std::vector<std::pair<double, size_t>> coeffs = poly_coeff.second;
-    //         intermediate_value = Evaluate(coeffs, value);
-    //         poly = poly.Substitute(poly2);
-    //
-    //         double poly_evaluation = poly(value);
-    //         double actual_evaluation = intermediate_value;
-    //         CheckCorrectness(poly_evaluation, actual_evaluation);
-    //     }
-    // }
 }
 
 TEST_CASE("Polynomial class works with SquareMatrix class") {
@@ -236,12 +208,8 @@ TEST_CASE("Polynomial class works with SquareMatrix class") {
                 auto poly_coeff = GenerateSMPolynomial(5);
                 p::Polynomial<Matrix> poly = poly_coeff.first + p::Polynomial<Matrix>::Zero();
                 std::vector<std::pair<Matrix, size_t>> coeffs = poly_coeff.second;
-                for (size_t dummy2 = 0; dummy2 < 10; ++dummy2) {
-                    Matrix value = GenerateMatrix();
-                    Matrix poly_evaluation = poly(value);
-                    Matrix actual_evaluation = Evaluate(coeffs, value);
-                    CheckMatrixCorrectness(poly_evaluation, actual_evaluation);
-                }
+
+                RunMatrixTest(poly, coeffs, 10);
             }
         }
         SUBCASE("Identity") {
@@ -249,12 +217,8 @@ TEST_CASE("Polynomial class works with SquareMatrix class") {
                 auto poly_coeff = GenerateSMPolynomial(5);
                 p::Polynomial<Matrix> poly = poly_coeff.first * p::Polynomial<Matrix>::Identity();
                 std::vector<std::pair<Matrix, size_t>> coeffs = poly_coeff.second;
-                for (size_t dummy2 = 0; dummy2 < 10; ++dummy2) {
-                    Matrix value = GenerateMatrix();
-                    Matrix poly_evaluation = poly(value);
-                    Matrix actual_evaluation = Evaluate(coeffs, value);
-                    CheckMatrixCorrectness(poly_evaluation, actual_evaluation);
-                }
+
+                RunMatrixTest(poly, coeffs, 10);
             }
         }
         SUBCASE("Constant") {
@@ -263,6 +227,7 @@ TEST_CASE("Polynomial class works with SquareMatrix class") {
                 p::Polynomial<Matrix> poly =
                     poly_coeff.first + p::Polynomial<Matrix>::Constant(666);
                 std::vector<std::pair<Matrix, size_t>> coeffs = poly_coeff.second;
+
                 for (size_t dummy2 = 0; dummy2 < 10; ++dummy2) {
                     Matrix value = GenerateMatrix();
                     Matrix poly_evaluation = poly(value);
@@ -279,12 +244,7 @@ TEST_CASE("Polynomial class works with SquareMatrix class") {
             p::Polynomial<Matrix> poly = poly_coeff.first;
             std::vector<std::pair<Matrix, size_t>> coeffs = poly_coeff.second;
 
-            for (size_t i = 0; i < 100; ++i) {
-                Matrix value = GenerateMatrix();
-                Matrix poly_evaluation = poly(value);
-                Matrix actual_evaluation = Evaluate(coeffs, value);
-                CheckMatrixCorrectness(poly_evaluation, actual_evaluation);
-            }
+            RunMatrixTest(poly, coeffs, 100);
         }
     }
 }

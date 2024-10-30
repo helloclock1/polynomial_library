@@ -10,6 +10,7 @@ include_directories(include)
 add_library(polynomial
     src/SquareMatrix.cpp
     src/Polynomial.cpp
+    src/MultivariatePolynomial.cpp
 )
 
 enable_testing()

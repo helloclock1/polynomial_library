@@ -34,6 +34,8 @@ Include headers from `include/`, invoke stored classes and functions with `p::` 
     ...
 ```
 
+**WARNING**: `p::MVPolynomial` (i.e., MultiVariate Polynomial) can only be constructed from a vector of terms, each term begin a pair of an array of N powers and coefficient. $i$-th element of the array corresponds to power of $x_i$.
+
 ## P.S.
 
 Everything was tested on latest updated Arch Linux distribution.

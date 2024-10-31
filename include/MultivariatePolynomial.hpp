@@ -63,7 +63,7 @@ public:
 
     friend MVPolynomial<T, N> operator+(T value, MVPolynomial<T, N> rhs) {
         std::array<T, N> constant_coefficient = {0};
-        rhs.coefficients_[constant_coefficient + 1] += value;
+        rhs.coefficients_[constant_coefficient] += value;
         return rhs;
     }
 

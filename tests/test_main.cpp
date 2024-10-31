@@ -10,6 +10,7 @@
 #include "doctest/doctest.h"
 #include "../include/SquareMatrix.hpp"
 #include "../include/Polynomial.hpp"
+#include "../include/MultivariatePolynomial.hpp"
 
 #define ll long long
 

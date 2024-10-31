@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <cxxabi.h>
 #include <map>
@@ -207,7 +209,7 @@ MVPolynomial<T, N>& MVPolynomial<T, N>::operator*=(const MVPolynomial<T, N>& rhs
             for (size_t i = 0; i < N; ++i) {
                 new_powers[i] = m1.first[i] + m2.first[i];
             }
-            new_coefficients[new_powers] += m1.secnod * m2.second;
+            new_coefficients[new_powers] += m1.second * m2.second;
         }
     }
     coefficients_ = new_coefficients;

@@ -34,7 +34,18 @@ Include headers from `include/`, invoke stored classes and functions with `p::` 
     ...
 ```
 
-**WARNING**: `p::MVPolynomial` (i.e., MultiVariate Polynomial) can only be constructed from a vector of terms, each term being a pair of an array of N powers and coefficient. $i$-th element of the array corresponds to power of $x_i$.
+**WARNING**: `p::MVPolynomial` (i.e., MultiVariate Polynomial) can only be constructed from a vector of terms, each term being a pair of an array of N powers and coefficient. $i$-th element of the array corresponds to power of $x_i$. Example usage of `p::MVPolynomial`:
+
+```cpp
+    ...
+    std::array<int, 2> term1 = {2, 3};
+    std::array<int, 2> term2 = {4, 5};
+    std::vector<std::pair<std::array<int, 2>, int>> init = {{term1, 6}, {term2, 7}};
+    p::MVPolynomial<int, 2> mvpoly(init);
+    // then user can do any operations they want to with the MVPolynomial
+    std::cout << mvpoly(-1);
+    ...
+```
 
 ## P.S.
 
